@@ -39,10 +39,20 @@ declare namespace Graph {
         coordinates: Coordinates
         associatedLabel?: Coordinates & PointLabel
     };
-    interface CustomRenderer<OutputType, CustomSettings extends { [key: string]: any } = {}> {
+    export interface CustomRenderer<OutputType, CustomSettings extends { [key: string]: any } = {}> {
         new(settings: GraphRendererSettings<CustomSettings>): CustomRenderer<OutputType, CustomSettings>;
         graphSettings: GraphRendererSettings<CustomSettings>;
         generateGraphPoints(points: CloudPoint[]): DisplayablePoint[];
-        renderPoints(points: DisplayablePoint[], uniquePointRenderer: (point: DisplayablePoint) => OutputType): OutputType[];
+        renderPoints(points: DisplayablePoint[], pointRenderer: (point: DisplayablePoint) => OutputType): OutputType[];
+    }
+    export interface GraphFactory {
+        defaultRenderer: CustomRenderer<HTMLElement>
+        currentRenderer: CustomRenderer<any, any>
+        customRenderers: {
+            [key: string]: CustomRenderer<any, any>
+        }
+        addRenderer<T>(key: string, renderer: CustomRenderer<T>): void
+        useDefaultRenderer(): GraphFactory["defaultRenderer"]
+        useRenderer(key: keyof GraphFactory["customRenderers"]): CustomRenderer<any, any>
     }
 };
