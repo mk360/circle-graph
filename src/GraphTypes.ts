@@ -39,21 +39,19 @@ export type DisplayablePoint = {
     coordinates: Coordinates
     associatedLabel?: Coordinates & PointLabel
 };
-export interface CustomRenderer<OutputType, CustomSettings extends { [key: string]: any } = {}> {
-    new(settings: GraphRendererSettings<CustomSettings>): CustomRenderer<OutputType, CustomSettings>;
-    graphSettings: GraphRendererSettings<CustomSettings>;
+export interface CustomRenderer<OutputType> {
     generateGraphPoints(points: CloudPoint[]): DisplayablePoint[];
     renderPoints(points: DisplayablePoint[], pointRenderer: (point: DisplayablePoint) => OutputType): OutputType[];
 }
 export interface GraphFactory {
     defaultRenderer: CustomRenderer<HTMLElement>
-    currentRenderer: CustomRenderer<any, any>
+    currentRenderer: CustomRenderer<any>
     customRenderers: {
-        [key: string]: CustomRenderer<any, any>
+        [key: string]: CustomRenderer<any>
     }
     addRenderer<T>(key: string, renderer: CustomRenderer<T>): void
     useDefaultRenderer(): GraphFactory["defaultRenderer"]
-    useRenderer(key: keyof GraphFactory["customRenderers"]): CustomRenderer<any, any>
+    useRenderer(key: keyof GraphFactory["customRenderers"]): CustomRenderer<any>
 }
 export type CoordinatesCalculationOptions = {
     center: Coordinates
