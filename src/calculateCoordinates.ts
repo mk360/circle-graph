@@ -12,13 +12,3 @@ function calculateCoordinates(options: GraphTypes.CoordinatesCalculationOptions)
 };
 
 export default calculateCoordinates;
-
-console.log(calculateCoordinates({ 
-    angle: 75,
-    center: {
-        x: 10,
-        y: 10
-    },
-    distance: 10,
-    angleOffset: 15
-}));
