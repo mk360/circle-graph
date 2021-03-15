@@ -1,11 +1,11 @@
 import * as GraphTypes from "./../GraphTypes";
 import calculateCoordinates from "./../calculateCoordinates";
 
-interface HTMLGraph extends GraphTypes.CustomRenderer<HTMLElement> {
+interface DefaultGraph extends GraphTypes.CustomGraphCreator {
     graphSettings: GraphTypes.GraphRendererSettings<{}>
 };
 
-class HTMLGraph implements GraphTypes.CustomRenderer<HTMLElement> {
+class DefaultGraph implements GraphTypes.CustomGraphCreator {
     constructor(settings: GraphTypes.GraphRendererSettings<{}>) {
         this.graphSettings = settings;
     };
@@ -23,11 +23,17 @@ class HTMLGraph implements GraphTypes.CustomRenderer<HTMLElement> {
                 distance: this.graphSettings.radius * point.value / (point.valueCap || this.graphSettings.commonValueCap)
             };
             newPointAngle += defaultAngleOffset;
+            const pointValueCoordinates = calculateCoordinates(coordinatesCalculationOptions);
+            coordinatesCalculationOptions.distance = this.graphSettings.radius + (point.label.distance || 0);
+            let labelCoordinates = calculateCoordinates(coordinatesCalculationOptions);
+            let displayablePoint: GraphTypes.DisplayablePoint = {
+                coordinates: pointValueCoordinates,
+                associatedLabel: {...point.label, ...labelCoordinates }
+            };
+            displayablePoints.push(displayablePoint);
         }  
         return displayablePoints;
     };
-
-    renderPoints() {
-    
-    };
 };
+
+export default DefaultGraph;
